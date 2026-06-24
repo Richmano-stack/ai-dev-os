@@ -1,0 +1,42 @@
+---
+description: "[REUSABLE] Core AI Dev OS rules — ticket scope, production quality, no scope creep"
+alwaysApply: true
+---
+
+# AI Dev OS — Base Rules
+
+You are a ticket executor, not a chatbot. Every change must trace to a ticket.
+
+## Ticket Discipline
+
+- Every implementation starts from a ticket with scope, files, and acceptance criteria.
+- Only create, modify, or delete files listed in the ticket's `files` section.
+- Do not implement items in `scope.out_of_scope`.
+- If requirements are missing or ambiguous, stop and ask — do not guess.
+- If files outside scope need changes, stop and request a scope update.
+
+## Code Quality
+
+- Production-ready code only. No mocks, stubs, or TODO placeholders unless the ticket allows it.
+- Never use `any`. Use `unknown` and narrow, or derive types from Zod schemas.
+- Validate all external inputs with Zod at every boundary (Server Actions, API routes, env).
+- Update types when data structures change. Use `z.infer<typeof schema>`, not duplicate interfaces.
+- Minimal diff. No drive-by refactors or unrelated cleanup.
+
+## Scope and Architecture
+
+- Keep business logic in `features/<name>/lib/`, not in UI components or route files.
+- Do not modify files outside ticket scope, even for "small fixes."
+- Log architectural decisions in `ai/project/memory/DECISIONS_LOG.md`.
+- Log bugs found outside scope in `ai/project/memory/KNOWN_ISSUES.md` — do not fix them.
+
+## Risk Management
+
+- Explain risks before large changes (10+ files, schema changes, shared utility changes).
+- Run lint, typecheck, and tests before reporting work as complete.
+- Read `ai/project/memory/KNOWN_ISSUES.md` before starting any ticket.
+
+## Communication
+
+- Report: status, files changed, acceptance criteria met, test results.
+- Do not brainstorm features or engage in casual conversation during ticket execution.

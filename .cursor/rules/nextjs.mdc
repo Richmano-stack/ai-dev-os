@@ -1,0 +1,65 @@
+---
+description: "[REUSABLE] Next.js App Router standards — Server Components, Server Actions, feature architecture"
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Next.js App Router Standards
+
+## Components
+
+- Server Components by default. Only add `"use client"` when the component needs hooks, browser APIs, or event handlers.
+- Push the client boundary to leaf components. Never mark a page or layout as client.
+- Use `loading.tsx` and `error.tsx` for route segments with async data.
+
+```tsx
+// ❌ BAD — entire page is client
+"use client";
+export default function Page() { /* fetches data in useEffect */ }
+
+// ✅ GOOD — server page, client leaf
+export default async function Page() {
+  const data = await getData();
+  return <InteractiveWidget data={data} />;
+}
+```
+
+## Data and Mutations
+
+- Fetch data in Server Components. No `useEffect` + `fetch` for initial page data.
+- Use Server Actions for all mutations. API Route Handlers only for webhooks and external callbacks.
+- Call `revalidatePath` or `revalidateTag` after every mutation.
+
+```typescript
+// ❌ BAD — unvalidated action
+export async function createTask(data: any) {
+  await db.task.create({ data });
+}
+
+// ✅ GOOD — validated, auth-checked, revalidated
+export async function createTask(input: CreateTaskInput): Promise<ActionResult<{ id: string }>> {
+  const session = await requireAuth();
+  const parsed = createTaskSchema.safeParse(input);
+  if (!parsed.success) return { success: false, error: "Invalid input" };
+  const task = await db.task.create({ data: { ...parsed.data, createdById: session.user.id } });
+  revalidatePath("/tasks");
+  return { success: true, data: { id: task.id } };
+}
+```
+
+## Feature Architecture
+
+- Code lives in `src/features/<name>/` with `actions/`, `components/`, `schemas/`, `types/`, `lib/`.
+- Route files in `src/app/` are thin — compose feature components, no business logic.
+- Never import across features. Compose in the `app/` layer instead.
+
+## Forms
+
+- React Hook Form with `zodResolver` for all user-facing forms.
+- Share Zod schemas between form resolver and Server Action.
+
+## Types and Validation
+
+- Zod schemas are the single source of truth. Derive types with `z.infer<typeof schema>`.
+- Check auth in every Server Action before mutations.
+- Return `ActionResult<T>` from actions. Do not throw for expected failures.
