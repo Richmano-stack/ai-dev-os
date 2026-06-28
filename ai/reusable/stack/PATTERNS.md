@@ -297,6 +297,77 @@ export const env = envSchema.parse(process.env);
 
 ---
 
+## 9. Client State Without useEffect
+
+Avoid `useEffect` unless syncing with an external system. See TECH_RULES.md useEffect section for the full policy.
+
+### Derive during render
+
+```tsx
+"use client";
+
+type UserGreetingProps = {
+  firstName: string;
+  lastName: string;
+};
+
+export function UserGreeting({ firstName, lastName }: UserGreetingProps) {
+  const fullName = `${firstName} ${lastName}`;
+  return <p>Hello, {fullName}</p>;
+}
+```
+
+### Reset with `key`
+
+```tsx
+// app/tasks/[taskId]/page.tsx (Server Component)
+import { EditTaskForm } from "@/features/tasks/components/edit-task-form";
+import { getTaskById } from "@/features/tasks/lib/queries";
+
+export default async function EditTaskPage({
+  params,
+}: {
+  params: Promise<{ taskId: string }>;
+}) {
+  const { taskId } = await params;
+  const task = await getTaskById(taskId);
+  if (!task) return null;
+
+  return <EditTaskForm key={task.id} task={task} />;
+}
+```
+
+When `taskId` changes, `key` remounts the form — no `useEffect` to reset state.
+
+### User action via handler + Server Action
+
+Reuse the `useTransition` form pattern from section 2. Trigger updates in event handlers, not effects:
+
+```tsx
+"use client";
+
+import { useTransition } from "react";
+import { refreshTasks } from "../actions/refresh-tasks";
+
+export function RefreshButton() {
+  const [isPending, startTransition] = useTransition();
+
+  function handleClick() {
+    startTransition(async () => {
+      await refreshTasks();
+    });
+  }
+
+  return (
+    <button type="button" onClick={handleClick} disabled={isPending}>
+      {isPending ? "Refreshing…" : "Refresh"}
+    </button>
+  );
+}
+```
+
+---
+
 ## Anti-Patterns
 
 Do not use these patterns. If you encounter them in existing code, log in KNOWN_ISSUES.md and fix only when in ticket scope.
@@ -304,6 +375,10 @@ Do not use these patterns. If you encounter them in existing code, log in KNOWN_
 | Anti-Pattern | Why It's Wrong | Correct Pattern |
 |--------------|----------------|-----------------|
 | `useEffect` + `fetch` for page data | Defeats SSR, causes loading flashes | Server Component data fetch |
+| `useEffect` to sync props → state | Extra render, easy bugs | Derive during render (section 9) |
+| `useEffect` for user-triggered fetch | Wrong lifecycle, no loading UX | Event handler + Server Action |
+| `useEffect` to reset form on prop change | Race conditions | `key={id}` on form component (section 9) |
+| Unnecessary `useEffect` | Avoidable complexity | See TECH_RULES.md useEffect section |
 | Business logic in `app/page.tsx` | Violates layer separation | `features/<n>/lib/` |
 | `any` type on action input | No compile-time safety | Zod schema + `z.infer` |
 | Importing sibling feature | Creates coupling | Compose in `app/` layer |

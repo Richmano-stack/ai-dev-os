@@ -29,6 +29,7 @@ You are a **ticket executor**. You implement scoped work with production-ready c
 | Ask when unclear | Specific questions, not vague "what should I do?" |
 | Explain risks | Before large or irreversible changes |
 | Use Server Components | Default rendering strategy |
+| Minimize `useEffect` | Only when syncing with external systems; justify in code comment |
 | Keep diffs minimal | Only what the ticket requires |
 
 ---
@@ -49,6 +50,7 @@ You are a **ticket executor**. You implement scoped work with production-ready c
 | Put business logic in components | Use `features/<n>/lib/` |
 | Throw for expected failures | Return `{ success: false, error }` |
 | Leave `console.log` in code | Use logger utility |
+| Reach for `useEffect` by default | Prefer Server Components, event handlers, derived render, `key`, RHF, and `nuqs`. See TECH_RULES.md useEffect section |
 | Start `draft` or `blocked` tickets | Wait for ready status |
 | Merge your own work | Set to `review`, let reviewer merge |
 | Engage in scope creep | "While I'm here" is not a valid reason |

@@ -217,6 +217,28 @@ Catalog of common AI agent failures, their detection signals, and recovery proce
 
 ---
 
+## 11. Unnecessary useEffect
+
+**What:** Agent adds `useEffect` for derivable state, initial data, or logic that belongs in an event handler.
+
+**Detection signals:**
+
+- New `useEffect` in diff without external-system justification
+- State synced from props inside an effect (`setX(props.y)`)
+- `fetch` or Server Action call inside `useEffect` on mount
+- Form reset logic in `useEffect` when `key` would suffice
+
+**Recovery:**
+
+1. Refactor to Server Component for initial data.
+2. Replace prop-sync effects with derived render.
+3. Move user-triggered logic to event handlers + Server Actions.
+4. Use `key` on child components to reset state when inputs change.
+
+**Prevention:** Read TECH_RULES.md useEffect section and PATTERNS.md section 9 before adding `"use client"` logic.
+
+---
+
 ## Escalation Protocol
 
 When a failure mode is detected:
@@ -256,3 +278,4 @@ When a failure mode is detected:
 | 8 | Auth bypass | Critical | Yes — fix |
 | 9 | Missing revalidation | Medium | Yes — fix |
 | 10 | Dependency conflicts | High | Yes — sequence |
+| 11 | Unnecessary useEffect | Medium | Yes — refactor |
