@@ -85,10 +85,12 @@ Use Server Components for:
 
 Add `"use client"` only when the component needs:
 
-- `useState`, `useEffect`, `useRef`, or other React hooks
-- Browser APIs (`window`, `localStorage`, `IntersectionObserver`)
 - Event handlers (`onClick`, `onChange`, `onSubmit`)
+- Browser APIs (`window`, `localStorage`, `IntersectionObserver`)
+- Client hooks such as `useState`, `useTransition`, or `useRef`
 - Third-party libraries that use hooks internally
+
+**`useEffect` is a last resort** — see [useEffect policy](#useeffect) and TECH_RULES.md.
 
 **Push `"use client"` to leaf components.** Do not mark entire page trees as client.
 
@@ -115,12 +117,16 @@ export default async function DashboardPage() {
 
 Every route group with async data fetching should have `loading.tsx` and `error.tsx`.
 
+### useEffect
+
+Do not use `useEffect` unless no other approach works. Prefer Server Components for data, event handlers for user actions, derived values during render, `key` for resets, React Hook Form for forms, and `nuqs` for URL state. Full policy: TECH_RULES.md useEffect section. Copy-paste alternatives: PATTERNS.md section 9.
+
 ---
 
 ## Data Fetching
 
 1. **Server-first.** Fetch data in Server Components or Server Actions.
-2. **No client fetch for initial page data.** Do not `useEffect` + `fetch` for data available at render time.
+2. **No `useEffect` for data.** Do not `useEffect` + `fetch` for initial page data or any data fetchable on the server or triggered by user action.
 3. **Cache deliberately.** Use `fetch` cache options or `unstable_cache` with explicit revalidation strategy.
 4. **Revalidate after mutations.** Call `revalidatePath` or `revalidateTag` in Server Actions after writes.
 

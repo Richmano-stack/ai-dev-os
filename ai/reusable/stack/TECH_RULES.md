@@ -192,12 +192,57 @@ export async function deleteTask(taskId: string): Promise<ActionResult<void>> {
 |---------|--------|--------|
 | Database access | Yes | Never |
 | Environment secrets | Yes | Never |
-| `useState`, `useEffect` | Never | Yes |
+| `useState`, `useTransition` | Never | Yes |
+| `useEffect` | Never | Last resort only (see below) |
 | Event handlers | Never | Yes |
 | Data fetching (initial) | Yes | Never |
 | Form interactivity | Never | Yes |
 
 **Violation signal:** `import { db }` in a file with `"use client"` — this is always wrong.
+
+---
+
+## useEffect
+
+**Do not use `useEffect` unless there is no other correct approach.** Before adding one, prove that Server Components, event handlers, derived render, `key`, React Hook Form, or `nuqs` cannot solve the problem.
+
+### Prefer instead
+
+| Situation | Preferred approach |
+|-----------|-------------------|
+| Initial page / route data | Server Component fetch |
+| User-triggered updates | Event handler + Server Action + `useTransition` |
+| State derived from props | Compute during render; do not sync with an effect |
+| Reset UI when inputs change | `key` prop on child component |
+| Form state | React Hook Form |
+| URL-driven UI state | `nuqs` |
+| Expensive derived value | Compute inline, or `useMemo` if profiling shows need |
+
+### Acceptable (last resort)
+
+- Subscribing to external stores or browser events (with cleanup)
+- Integrating imperative third-party libraries (charts, maps, editors)
+- DOM measurement that cannot run during render
+- Syncing with an external system per React docs — add a brief comment explaining why
+
+### Never acceptable
+
+- Fetching data available at first render
+- Transforming props/state into other state ("syncing" state)
+- Running logic that belongs in an event handler
+- Fixing architecture problems (e.g., lifting data fetch to server)
+
+```tsx
+// Bad — syncing derived state
+useEffect(() => {
+  setFullName(firstName + " " + lastName);
+}, [firstName, lastName]);
+
+// Good — derive during render
+const fullName = `${firstName} ${lastName}`;
+```
+
+See PATTERNS.md section 9 for copy-paste alternatives.
 
 ---
 
