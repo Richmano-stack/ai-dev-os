@@ -1,4 +1,4 @@
-> **Type: REUSABLE** | Copy as-is across Next.js projects. Edit only to improve the shared template.
+> **Type: REUSABLE** | Copy as-is across projects. Edit only to improve the shared template.
 
 # Ticket Schema
 
@@ -140,10 +140,10 @@ Known risks and mitigations. Helps reviewers and parallel execution checks.
 
 ## Ticket File Location
 
-Store tickets as Markdown files:
+Store tickets as Markdown files grouped by feature:
 
 ```
-ai/project/tickets/TICKET-001-short-slug.md
+ai/project/features/<feature_name>/tickets/TICKET-001-short-slug.md
 ```
 
 Or in your project management tool — but the fields above are required regardless of storage.

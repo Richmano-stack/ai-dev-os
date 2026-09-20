@@ -105,7 +105,7 @@ The MVP requires create, update, and delete operations for tasks. We need to cho
 
 ### Decision
 
-All data mutations will use Next.js Server Actions with Zod validation. API Route Handlers are reserved for webhooks and third-party callbacks only.
+All data mutations will use your framework Server Actions with Zod validation. API Route Handlers are reserved for webhooks and third-party callbacks only.
 
 ### Alternatives Considered
 
@@ -126,7 +126,7 @@ All data mutations will use Next.js Server Actions with Zod validation. API Rout
 **Negative:**
 
 - Team must learn Server Action error handling patterns
-- Harder to expose mutations to non-Next.js clients (acceptable for MVP)
+- Harder to expose mutations to non-your framework clients (acceptable for MVP)
 
 ### References
 

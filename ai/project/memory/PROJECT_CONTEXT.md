@@ -52,7 +52,7 @@ PROJECT_CONTEXT.md is the **operational map** of this specific codebase. It give
 \`\`\`
 <!-- FILL: Directory tree with brief annotations -->
 src/
-├── app/           # Next.js App Router pages and layouts
+├── app/           # the framework pages and layouts
 ├── features/      # Feature modules (domain logic)
 ├── components/    # Shared UI components
 └── lib/           # Shared utilities and infrastructure

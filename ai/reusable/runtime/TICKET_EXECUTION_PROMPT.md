@@ -1,17 +1,17 @@
-> **Type: REUSABLE** | Copy as-is across Next.js projects. Edit only to improve the shared template.
+> **Type: REUSABLE** | Copy as-is across projects. Edit only to improve the shared template.
 
 # Ticket Execution Prompt
 
 Copy-paste template for **starting a single ticket** in Cursor Agent mode. Use this per task — not as a global system prompt.
 
-For standing agent identity, see [SYSTEM_PROMPT.md](./SYSTEM_PROMPT.md). For what to read and when, see [CONTEXT_POLICY.md](./CONTEXT_POLICY.md).
+For standing agent identity, see [SYSTEM_PROMPT.md](./SYSTEM_PROMPT.md). For what to read and when, see [CONTEXT_POLICY.md](./CONTEXT_POLICY.md). For skill mappings by phase, see [SKILLS_MAP.md](./SKILLS_MAP.md).
 
 ---
 
 ## When to Use
 
-- You have a ticket file with `status: ready` or `in_progress`
-- You want the agent to implement without scope drift
+- You have a ticket file with `status: ready` or `in_progress` in `ai/project/features/<feature_name>/tickets/`
+- The foundation checklist (`ai/project/FOUNDATION_CHECKLIST.md`) is fully complete
 - You are in **Agent mode** (not Ask mode)
 
 ## How to Use in Cursor
@@ -19,34 +19,33 @@ For standing agent identity, see [SYSTEM_PROMPT.md](./SYSTEM_PROMPT.md). For wha
 1. Open Agent chat.
 2. `@`-reference your ticket file (required).
 3. Copy the prompt below into chat.
-4. Replace `TICKET-NNN-your-slug` with your actual ticket path.
+4. Replace `<feature_name>` and `TICKET-NNN-your-slug` with your actual values.
 5. Send.
-
-**Tip:** You can also `@`-reference the docs listed in the prompt instead of relying on path strings alone.
 
 ---
 
 ## Feature Ticket (default)
 
-Use for `type: feature` tickets — new capabilities, UI, Server Actions, schemas.
+Use for `type: feature` tickets — new capabilities, UI, actions, schemas.
 
 ```
-Execute @ai/project/tickets/TICKET-NNN-your-slug.md
+Execute @ai/project/features/<feature_name>/tickets/TICKET-NNN-your-slug.md
 
-You are a ticket executor for a Next.js App Router project — not a brainstorming assistant.
+You are a ticket executor — not a brainstorming assistant.
 
 ## Before writing any code — read in this order
 
-1. The ticket — verify status is ready or in_progress; all blocked_by tickets are done
-2. ai/reusable/runtime/CONTEXT_POLICY.md — follow loading rules for this ticket type
-3. ai/reusable/workflow/EXECUTION_RULES.md — pre/during/post execution protocol
-4. ai/reusable/runtime/AGENT_RULES.md — do/don't and scope enforcement
-5. ai/project/memory/PROJECT_CONTEXT.md
-6. ai/project/memory/KNOWN_ISSUES.md
-7. ai/project/memory/DECISIONS_LOG.md — if this ticket touches architecture or dependencies
-8. ai/reusable/stack/TECH_RULES.md
-9. ai/reusable/stack/PATTERNS.md — copy patterns; do not invent alternatives
-10. ai/reusable/stack/ARCHITECTURE.md
+1. The ticket — verify status is `ready` or `in_progress`; all `blocked_by` tickets are done
+2. ai/project/FOUNDATION_CHECKLIST.md — confirm all required items are done before proceeding
+3. ai/reusable/runtime/CONTEXT_POLICY.md — follow loading rules for this ticket type
+4. ai/reusable/workflow/EXECUTION_RULES.md — pre/during/post execution protocol
+5. ai/reusable/runtime/AGENT_RULES.md — do/don't and scope enforcement
+6. ai/project/memory/PROJECT_CONTEXT.md
+7. ai/project/memory/KNOWN_ISSUES.md
+8. ai/project/memory/DECISIONS_LOG.md — if this ticket touches architecture or dependencies
+9. ai/reusable/stack/TECH_RULES.md
+10. ai/reusable/stack/PATTERNS.md — copy patterns; do not invent alternatives
+11. ai/reusable/stack/ARCHITECTURE.md
 
 If other tickets are in_progress, check ai/reusable/workflow/PARALLELISM_RULES.md before starting.
 
@@ -56,10 +55,7 @@ If other tickets are in_progress, check ai/reusable/workflow/PARALLELISM_RULES.m
 - Only implement scope.in_scope — never scope.out_of_scope
 - If a file outside scope must change: STOP and request a ticket scope update
 - Production-ready code only — no mocks, stubs, or TODO placeholders unless the ticket allows it
-- Never use any — validate all inputs with Zod
-- Server Components by default; Server Actions for mutations; auth check in every action
-- Business logic in features/<name>/lib/, not in UI components or route files
-- No cross-feature imports — compose in app/ layer
+- Follow TECH_RULES.md and PATTERNS.md exactly — do not apply rules from other projects
 - If requirements are ambiguous: STOP and ask — do not guess
 
 ## During execution
@@ -95,7 +91,7 @@ Notes: [decisions made, deviations, blockers]
 Use for `type: bugfix`. Omit architecture deep-read unless the fix spans features.
 
 ```
-Execute @ai/project/tickets/TICKET-NNN-your-slug.md
+Execute @ai/project/features/<feature_name>/tickets/TICKET-NNN-your-slug.md
 
 You are a ticket executor. Fix only what this ticket specifies.
 
@@ -107,7 +103,7 @@ You are a ticket executor. Fix only what this ticket specifies.
 4. ai/project/memory/KNOWN_ISSUES.md — check if this bug is already logged
 5. ai/project/memory/PROJECT_CONTEXT.md
 6. ai/reusable/stack/TECH_RULES.md
-7. ai/reusable/stack/PATTERNS.md — if fix involves Server Actions or forms
+7. ai/reusable/stack/PATTERNS.md — if fix involves patterns used in this project
 8. All files listed in ticket.files — read fully before changing
 
 ## Hard constraints
@@ -131,7 +127,7 @@ You are a ticket executor. Fix only what this ticket specifies.
 Use for `type: refactor` — restructure without behavior change.
 
 ```
-Execute @ai/project/tickets/TICKET-NNN-your-slug.md
+Execute @ai/project/features/<feature_name>/tickets/TICKET-NNN-your-slug.md
 
 You are a ticket executor. Refactor only what this ticket specifies. Behavior must not change unless the ticket says so.
 
@@ -165,7 +161,7 @@ You are a ticket executor. Refactor only what this ticket specifies. Behavior mu
 Use for `type: chore` — tooling, deps, config.
 
 ```
-Execute @ai/project/tickets/TICKET-NNN-your-slug.md
+Execute @ai/project/features/<feature_name>/tickets/TICKET-NNN-your-slug.md
 
 You are a ticket executor. Complete only what this ticket specifies.
 
@@ -196,7 +192,7 @@ You are a ticket executor. Complete only what this ticket specifies.
 Use when you want the agent to validate a ticket before implementation.
 
 ```
-Review @ai/project/tickets/TICKET-NNN-your-slug.md against ai/reusable/workflow/TICKET_SCHEMA.md.
+Review @ai/project/features/<feature_name>/tickets/TICKET-NNN-your-slug.md against ai/reusable/workflow/TICKET_SCHEMA.md.
 
 Do not write code.
 
@@ -227,6 +223,7 @@ Use both: system prompt sets identity; this prompt starts each ticket with expli
 
 ## Related
 
+- [SKILLS_MAP.md](./SKILLS_MAP.md) — which skill to invoke at each phase
 - [EXECUTION_RULES.md](../workflow/EXECUTION_RULES.md) — detailed execution protocol
 - [CONTEXT_POLICY.md](./CONTEXT_POLICY.md) — authoritative read order by ticket type
 - [FAILURE_MODES.md](./FAILURE_MODES.md) — what to do when drift is detected

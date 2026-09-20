@@ -1,4 +1,4 @@
-> **Type: REUSABLE** | Copy as-is across Next.js projects. Edit only to improve the shared template.
+> **Type: REUSABLE** | Copy as-is across projects. Edit only to improve the shared template.
 
 # File Type Legend
 
@@ -49,7 +49,7 @@ Every file starts with a type banner:
 ```
 
 ```markdown
-> **Type: REUSABLE** | Copy as-is across Next.js projects...
+> **Type: REUSABLE** | Copy as-is across projects...
 ```
 
 ### In parent folder READMEs
@@ -81,14 +81,14 @@ flowchart TB
   Stack --> Tickets
   Runtime --> Tickets
   CursorRules --> Tickets
-  Tickets --> Code[Next.js Codebase]
+  Tickets --> Code[your framework Codebase]
 ```
 
 ---
 
 ## Starting a New Project
 
-1. Copy the entire `ai/` folder and `.cursor/rules/` into your Next.js project.
+1. Copy the entire `ai/` folder and `.cursor/rules/` into your your framework project.
 2. **Leave `ai/reusable/` unchanged.**
 3. **Fill in everything under `ai/project/`.**
 4. Create tickets in `ai/project/tickets/`.

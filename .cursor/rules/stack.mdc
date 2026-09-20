@@ -1,0 +1,14 @@
+---
+description: Apply these rules to code implementations
+globs: *.*
+---
+
+# Tech Stack Rules
+
+Follow the architecture, rules, and patterns defined in:
+- `ai/reusable/stack/TECH_STACK.md`
+- `ai/reusable/stack/ARCHITECTURE.md`
+- `ai/reusable/stack/TECH_RULES.md`
+- `ai/reusable/stack/PATTERNS.md`
+
+Always check the `ai/project/memory/` and `ai/project/product/` directories for project-specific context before making assumptions.

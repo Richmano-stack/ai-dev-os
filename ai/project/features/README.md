@@ -1,10 +1,10 @@
 > **Type: PROJECT-SPECIFIC** | Customize for your product. Update as requirements and context evolve.
 
-## tickets
+## features
 
-Store ticket files here — one Markdown file per ticket.
+Store your feature-based folders here. Inside each feature folder, create a `tickets/` directory to store your work items.
 
-**Naming:** `TICKET-001-short-slug.md`
+**Structure:** `ai/project/features/<feature_name>/tickets/TICKET-001-short-slug.md`
 
 **Schema:** See [../../reusable/workflow/TICKET_SCHEMA.md](../../reusable/workflow/TICKET_SCHEMA.md) for required fields.
 
@@ -13,8 +13,8 @@ Store ticket files here — one Markdown file per ticket.
 **Example:**
 
 ```
-ai/project/tickets/TICKET-001-setup-auth.md
-ai/project/tickets/TICKET-002-create-task-action.md
+ai/project/features/authentication/tickets/TICKET-001-setup-auth.md
+ai/project/features/tasks/tickets/TICKET-002-create-task-action.md
 ```
 
 Every implementation starts from a ticket. Do not write code without one.

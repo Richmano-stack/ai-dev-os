@@ -1,4 +1,4 @@
-> **Type: REUSABLE** | Copy as-is across Next.js projects. Edit only to improve the shared template.
+> **Type: REUSABLE** | Copy as-is across projects. Edit only to improve the shared template.
 
 # Failure Modes
 
