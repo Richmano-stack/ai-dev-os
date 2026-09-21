@@ -1,6 +1,6 @@
 ---
-description: "[REUSABLE] Core AI Dev OS rules — phase awareness, ticket scope, no scope creep"
-alwaysApply: true
+AGY_RULE: true
+description: Core AI Dev OS rules — phase awareness, ticket scope, no scope creep
 ---
 
 # AI Dev OS — Base Rules
